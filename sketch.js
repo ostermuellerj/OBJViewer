@@ -1,5 +1,4 @@
 var inc = 0;
-//var coords = [];
 var coords = 
     [
         "0 0 0",
@@ -13,15 +12,16 @@ var coords =
     ]
 
 var prev = "";
-var doRotate = false;
-var drawPoints = false;
-var drawModel = true;
-var drawOBJ = true;
 var model1;
+var doRotate = false,
+    drawPoints = false,
+    drawModel = true,
+    drawOBJ = true;
+
 
 //runs once before setup
 function preload() {
-    model1 = loadModel('star.obj');
+    model1 = loadModel('objs/star.obj');
 }
 
 //runs once before draw
