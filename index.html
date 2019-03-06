@@ -1,54 +1,21 @@
 <html>
   <head>
       <style>
-          p, h1 {
-            font-family: Helvetica, sans-serif;
-            font-weight: bold;
-          }
-          
-          h1 {
-              position: fixed;
-              top: 0;
-              left: 25;
-          }
-          
-          #input-container {
-              position: fixed;
-              bottom: 20;
-              left: 20;
-          }
-      </style>
+                </style>
       
       <title>OBJ VIEWER</title>
-      <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script> 
+      <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'/>
+      <link rel="stylesheet" type="text/css" href="styles.css">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>  
       <script src="sketch.js"></script>
-  </head>
-  <body>
-      <div id="sketch-container"></div>
-      
-      <h1>OBJ VIEWER</h1>
-      
-      <div id="input-container">
-        <p>input coordinates below,<br>then click SIMULATE</p>
-        <input type="text" id="myText" value="">
-
-        <p></p>
-        <button onclick="addPoint()" align="center">ADD POINT</button>
-
-        <p></p>
-        <button onclick="clearPoints()">CLEAR POINTS</button>
-
-        <p></p>
-        <button onclick="toggle(0)">TOGGLE ROTATE</button>      
-
-        <p></p>
-        <button onclick="toggle(1)">TOGGLE DRAW POINTS</button>  
-
-        <p></p>
-        <button onclick="toggle(2)">TOGGLE DRAW OBJ</button>
-
-        <p id="demo"></p>
-      </div>
-  </body>
+      <script src="libraries/dat.gui.js"></script>
+      <script src="libraries/p5.dom.js"></script>
+      <script src="libraries/p5.sound.js"></script>
+      <script src="libraries/quicksettings.js"></script>
+      <script src="libraries/p5.gui.js"></script>     
+    </head>
+    <body>
+        <img src="images/favicon.png" alt="Polyhedron logo" width="32">
+        <h1>OBJ VIEWER</h1>
+    </body>
 </html>

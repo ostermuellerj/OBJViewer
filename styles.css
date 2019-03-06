@@ -1,0 +1,23 @@
+p, h1 {
+    font-family: Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 50;
+}
+
+h1 {
+  position: fixed;
+  top: 0;
+  left: 25;
+}
+
+img {
+  position: fixed;
+  top: 0;
+  left: 25;
+}
+
+#input-container {
+  position: fixed;
+  bottom: 20;
+  left: 20;
+}
