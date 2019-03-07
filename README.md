@@ -2,7 +2,7 @@
 
 A web application for viewing OBJ files with p5.js and WebGL.
 
-![window view](/images/2_19_19.png?raw=true "demo")
+![window view](/images/3_6_19.png?raw=true "demo")
 
 *OBJViewer displaying star.obj from [TurboSquid]*
 
