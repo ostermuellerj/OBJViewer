@@ -6,14 +6,15 @@ p, h1 {
 
 h1 {
   position: fixed;
-  top: 0;
-  left: 25;
+  top: 10;
+  left: 120;
 }
 
 img {
-  position: fixed;
-  top: 0;
-  left: 25;
+    position: fixed;
+    top: 33;
+    left: 25;
+    width: 80;
 }
 
 #input-container {
