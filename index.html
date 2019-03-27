@@ -1,18 +1,310 @@
-<html>
-    <head>
-        <title>OBJ VIEWER</title>
-        <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'/>
-        <link rel="stylesheet" type="text/css" href="styles.css">
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - OBJLoader2 basic usage</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000;
+				color: #fff;
+				margin: 0 0 0 0;
+				padding: 0 0 0 0;
+				border: none;
+				cursor: default;
+			}
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+			#info a {
+				color: #f00;
+				font-weight: bold;
+				text-decoration: underline;
+				cursor: pointer
+			}
+			#glFullscreen {
+				width: 100%;
+				height: 100vh;
+				min-width: 640px;
+				min-height: 360px;
+				position: relative;
+				overflow: hidden;
+				z-index: 0;
+			}
+			#example {
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				background-color: #ffffff;
+			}
+			#feedback {
+				color: #ffffff;
+			}
+			#dat {
+				user-select: none;
+				position: absolute;
+				left: 0;
+				top: 0;
+				z-Index: 200;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="glFullscreen">
+			<canvas id="example"></canvas>
+		</div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>  
-        <script src="sketch.js"></script>
+<!--
+        <script src="libraries/p5.dom.js"></script>       
         <script src="libraries/dat.gui.js"></script>
-        <script src="libraries/p5.dom.js"></script>
-        <script src="libraries/p5.sound.js"></script>
         <script src="libraries/quicksettings.js"></script>
-        <script src="libraries/p5.gui.js"></script>     
-    </head>
-    <body>
-        <img src="images/favicon.png" alt="Polyhedron logo">
-        <h1>OBJ VIEWER</h1>
-    </body>
+        <script src="libraries/p5.gui.js"></script>   
+-->
+        
+		<script src="libraries/three.min.js"></script>
+        <script src="libraries/OrbitControls.js"></script>
+        <script src="libraries/OBJLoader.js"></script>
+        <script src="libraries/MTLLoader.js"></script>
+        <script src="main.js"></script>
+        <script>
+            function mousePressed(){
+                console.log("adsfkb");
+            }
+            var inc=0;
+            var inc2=0;
+            var mesh;
+			'use strict';            
+            var group;
+//            var rectLength = 800, rectWidth = 1093;
+            
+            var scene;
+            var objContainer;
+            var objScale=.8;
+            var img;
+            
+            var gui;
+            
+            var lines = [ "51281557_2291943650868015_4014672610662023168_o",
+                          "51548731_784458005222672_9191390520662818816_n",
+                          "51727710_377234296411211_9006014603976507392_n",
+                          "52507978_2312889665440080_2112053724040921088_n",
+                          "52590434_2753011128258304_1145537287593918464_o"];
+            
+            var location1 = [ "50 -670",
+                              "50 -670",
+                              "50 -670",
+                              "50 -670",
+                              "50 -670" ];
+//            function setup() {
+//                gui = createGui('SETTINGS', 0, windowHeight-200);
+//                gui.addGlobals('lines');
+//            }
+            
+//            for (int i=0; i<lines.length; i++) {
+//                    run(lines[i], 0, location[i]);
+//                    run(lines[i], 1, location[i]);
+//            }
+//            
+            run(1, 0);
+            
+            function run( id, age) {
+                filename=lines[id];
+                loc=location1[id];
+                
+                if(age==0){   
+                    var path_2d = 'aging_results/org_img/'+filename+'.jpg';
+                    var path_3d = 'aging_results/org_3D/'+filename;
+                }
+                else if (age==1){
+                    var path_2d = 'aging_results/aged_img/'+filename+'.jpg.png';  
+                    var path_3d = 'aging_results/aged_3D/'+filename+'.jpg';
+                } 
+                
+                var locX = loc.split(" ")[0];
+                var locY = loc.split(" ")[1];
+                
+                var rectLength, rectWidth;
+                img = new Image();
+                img.src = path_2d;
+                img.onload = function() {
+
+                    rectWidth = img.height;
+                    rectLength = img.width;
+    //                console.log(rectWidth);
+
+
+                    var OBJLoader2Example = function ( elementToBindTo ) {
+                        this.renderer = null;
+                        this.canvas = elementToBindTo;
+                        this.aspectRatio = 1;
+                        this.recalcAspectRatio();
+
+                        scene = new THREE.Scene();
+                        this.cameraDefaults = {
+                            posCamera: new THREE.Vector3(0, 0, 4000),
+        //                    posCamera: new THREE.Vector3(500, 500, 500),
+                            posCameraTarget: new THREE.Vector3( 0, 0, 0 ),
+                            near: 220,
+                            far: 10000,
+                            fov: 45
+                        };
+                        this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 100000 );;
+                        this.cameraTarget = this.cameraDefaults.posCameraTarget;
+
+                        this.controls = null;    
+                    };
+
+                    OBJLoader2Example.prototype = {
+
+                        constructor: OBJLoader2Example,
+
+                        initGL: function () {
+                            this.renderer = new THREE.WebGLRenderer( {
+                                canvas: this.canvas,
+                                antialias: true,
+                                autoClear: true
+                            } );
+
+                            //set background
+                            this.renderer.setClearColor( 0xffffff );
+                            scene.background = new THREE.Color( 0xd1d1d1 );
+
+                            //set perspective camera, orbit controls
+                            this.camera = new THREE.PerspectiveCamera( this.cameraDefaults.fov, this.aspectRatio, this.cameraDefaults.near, this.cameraDefaults.far );
+                            this.resetCamera();
+                            this.controls = new THREE.OrbitControls( this.camera );
+
+                            group = new THREE.Group();
+                            scene.add( group );
+                            group.position.y = rectWidth/2;
+
+                            var ambientLight = new THREE.AmbientLight( 'rgb(255, 255, 255)' );
+                            scene.add( ambientLight );
+                        },
+
+                        initContent: function () {
+                            objContainer = new THREE.Object3D();
+
+                            //load texture
+                            var loader = new THREE.TextureLoader();
+                            var texture = loader.load(path_2d);
+                            texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;                    
+                            texture.repeat.set(1/rectLength, 1/rectWidth);                    
+
+
+
+                            //draw rect
+                            var x=0, y=0, z=0;                    
+                            var rx=0,ry=0,rz=0
+                            var rectShape = new THREE.Shape();
+                            rectShape.moveTo( 0, 0 );
+                            rectShape.lineTo( 0, rectWidth );
+                            rectShape.lineTo( rectLength, rectWidth );
+                            rectShape.lineTo( rectLength, 0 );
+                            rectShape.lineTo( 0, 0 );
+                            var geometry = new THREE.ShapeBufferGeometry ( rectShape );
+                            mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, map: texture } ) );
+                                mesh.position.set( x-(rectLength/2)*objScale, y-(rectWidth/2)*objScale, z );
+                                mesh.rotation.set( rx, ry, rz );
+                                mesh.scale.set( objScale, objScale, objScale );
+                                group.add( mesh );
+
+                            //load face MTL
+                            var mtlLoader = new THREE.MTLLoader();
+        //                    mtlLoader.setPath('obj/');
+                            mtlLoader.load(path_3d+'.mtl', function (materials) {
+
+                                materials.preload();
+
+                                //load face OBJ
+                                var objLoader = new THREE.OBJLoader();
+                                objLoader.setMaterials(materials);
+        //                        objLoader.setPath('obj/');
+                                objLoader.load(path_3d+'.obj', function (object) {
+                                    objContainer=object;
+                                    scene.add(objContainer);
+                                    objContainer.position.y = locY;
+                                    objContainer.position.x = locX;
+                                });
+                            });
+
+                        },
+
+                        //handle resize
+                        resizeDisplayGL: function () {
+                            this.camera.aspect = window.innerWidth / window.innerHeight;
+                            this.camera.updateProjectionMatrix();
+                            this.renderer.setSize( window.innerWidth, window.innerHeight );
+                        },
+
+                        recalcAspectRatio: function () {
+                            this.aspectRatio = ( this.canvas.offsetHeight === 0 ) ? 1 : this.canvas.offsetWidth / this.canvas.offsetHeight;
+                        },
+
+                        resetCamera: function () {
+                            this.camera.position.copy( this.cameraDefaults.posCamera );
+                            this.cameraTarget.copy( this.cameraDefaults.posCameraTarget );
+
+                            this.updateCamera();
+                        },
+
+                        updateCamera: function () {
+                            this.camera.aspect = this.aspectRatio;
+                            this.camera.lookAt( this.cameraTarget );
+                            this.camera.updateProjectionMatrix();
+                        },
+
+                        //updates every frame
+                        render: function () {
+                            var offset=110;
+                            if(inc < 3.5) {
+                                mesh.position.set( (-rectLength/2)*.8, (-rectWidth)*.8, 0);                   
+                                objContainer.position.z = -(300-offset+offset*Math.sin(inc+1));
+                            }
+
+                            if ( ! this.renderer.autoClear ) this.renderer.clear();
+                            this.controls.update();
+                            this.renderer.render( scene, this.camera );
+                            //run after delay
+                            if(inc2>0) inc+=.01;
+                            inc2+=.01;
+                        }
+                    };
+
+                    var app = new OBJLoader2Example( document.getElementById( 'example' ) );
+
+                    //call handle resize
+                    var resizeWindow = function () {
+                        app.resizeDisplayGL();
+                    };
+
+                    //call render
+                    var render = function () {
+                        requestAnimationFrame( render );
+                        app.render();
+
+                    };
+
+                    window.addEventListener( 'resize', resizeWindow, false );
+
+                    inc++;
+                    app.initGL();
+                    app.resizeDisplayGL();
+                    app.initContent();
+
+                    render();
+                }
+            }
+		</script>
+	</body>
 </html>
