@@ -1,1 +1,3 @@
-# AGING_DEMO
+# OBJViewer
+
+![Demo](demo.png)
